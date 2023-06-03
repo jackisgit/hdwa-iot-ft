@@ -1,0 +1,12 @@
+server:
+  port: 9320
+#广场ID及GatewayId
+epc:
+  gatewayId: FT
+  gcId: 3611020000
+  subsystem: ft/
+modbus:
+  serverIP: 10.11.80.240
+  port: 10000
+
+beanName: rLFTDevice
