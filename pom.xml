@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.wanda.epc</groupId>
+        <artifactId>iot_epc</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>iot_epc_ft</artifactId>
+    <name>iot_epc_ft</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.wanda.epc</groupId>
+            <artifactId>iot_epc_common</artifactId>
+            <version>${iot_epc_common.version}</version>
+        </dependency>
+        <!-- netty -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <finalName>IEPC_FQQC_FT</finalName>
+    </build>
+
+</project>
