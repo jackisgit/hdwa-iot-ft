@@ -3,13 +3,13 @@ server:
 #广场ID及GatewayId
 epc:
   gatewayId: FT
-  gcId: 5101060270
+  gcId: 3304020130
   subsystem: ft/
   unitIdCount: 25
   threadNum: 1
 modbus:
-  serverIP: 192.168.1.122
-  port: 10000
+  serverIP: 192.168.1.198
+  port: 6001
 
 beanName: rLFTDevice
 mqtt:

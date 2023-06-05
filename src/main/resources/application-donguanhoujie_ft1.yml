@@ -6,6 +6,7 @@ epc:
   gcId: 4419001220
   subsystem: ft/
   unitIdCount: 15
+  threadNum: 1
 modbus:
   serverIP: 10.26.58.191
   port: 10000
