@@ -49,7 +49,7 @@ public class TcpClient {
             }
          });
 
-         ChannelFuture future = bootstrap.connect("192.168.2.196", 60001).sync();
+         ChannelFuture future = bootstrap.connect(serverIP, port).sync();
          //请求报文
          ByteBuf byteBufMsg = Unpooled.buffer();
          byteBufMsg.writeBytes(base);
@@ -59,6 +59,6 @@ public class TcpClient {
          e.printStackTrace();
       }finally{
          workerGroup.shutdownGracefully();
-      } 
+      }
    }
 }
