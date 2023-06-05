@@ -25,26 +25,20 @@ import java.util.concurrent.CompletableFuture;
 
 
 /**
- * @author Liurs
+ * @author 孙率众
  * @project iot-epc-module
  * @description 日历扶梯采集器
  * @date 2023/03/02 15:44:36
  */
 @Slf4j
 @Service
-public class RLFTDevice  extends BaseDevice {
+public class RLFTDevice extends BaseDevice {
 
     private final static Logger logger = LoggerFactory.getLogger(RLFTDevice.class);
 
 
     @Autowired
     CommonDevice commonDevice;
-
-    @Value("${epc.gcId}")
-    private String gcId;
-
-    @Value("${epc.gatewayId}")
-    private String gatewayId;
 
     /**
      * ModbusIp
@@ -58,9 +52,15 @@ public class RLFTDevice  extends BaseDevice {
     @Value("${modbus.port}")
     private Integer port;
 
+    /**
+     * 电梯最大编号，用作遍历查询
+     */
+    @Value("${epc.unitIdCount}")
+    private Integer unitIdCount;
+
     private static ModbusTcpMaster master;
 
-    private static Object  result = null;
+    private static Object result = null;
 
     private static int registerTypeId = 3;
 
@@ -85,19 +85,19 @@ public class RLFTDevice  extends BaseDevice {
     }
 
     @Override
-    public boolean processData() throws Exception {
+    public boolean processData() {
         //读操作
-        for (int unitId =1; unitId <= 47; unitId++){
+        for (int unitId = 1; unitId <= unitIdCount; unitId++) {
             try {
                 //40002 状态
-                String status = (String)readDevInfo(registerTypeId, dataTypeId, 2, unitId, 1);
+                String status = (String) readDevInfo(registerTypeId, dataTypeId, 2, unitId, 1);
                 String[] s = status.split("\\s+");
                 String zt = ByteUtil.decimalToBinary(ByteUtil.hexStringToInt(s[0]), 8);
                 String xxzt = String.valueOf(zt.charAt(4));
                 String sxzt = String.valueOf(zt.charAt(5));
                 String yxzt = String.valueOf(zt.charAt(7));
                 //40003 故障
-                String faultStatus = (String)readDevInfo(registerTypeId, dataTypeId, 3, unitId, 1);
+                String faultStatus = (String) readDevInfo(registerTypeId, dataTypeId, 3, unitId, 1);
                 String[] f = faultStatus.split("\\s+");
                 String fault = ByteUtil.decimalToBinary(ByteUtil.hexStringToInt(f[0]), 8);
                 String gz = String.valueOf(fault.charAt(7));
@@ -118,9 +118,9 @@ public class RLFTDevice  extends BaseDevice {
                 }
                 DeviceMessage deviceMessageFaultStatus = deviceParamMap.get(unitId + "_faultStatus");
                 if (deviceMessageFaultStatus != null) {
-                    if (gz.equals("0")){
+                    if (gz.equals("0")) {
                         deviceMessageFaultStatus.setValue("0");
-                    }else {
+                    } else {
                         deviceMessageFaultStatus.setValue("1");
                     }
                     sendMessage(deviceMessageFaultStatus);
@@ -130,8 +130,8 @@ public class RLFTDevice  extends BaseDevice {
                     deviceMessageAccRunTime.setValue("0");
                     sendMessage(deviceMessageAccRunTime);
                 }
-                logger.info(unitId +"号扶梯"+ "YXZT:" + yxzt + " SXZT:" + sxzt + " XXZT:" + xxzt );
-            }catch (Exception e){
+                logger.info(unitId + "号扶梯" + "YXZT:" + yxzt + " SXZT:" + sxzt + " XXZT:" + xxzt);
+            } catch (Exception e) {
                 logger.info("采集{}号扶梯数据失败", unitId);
             }
 
@@ -149,16 +149,14 @@ public class RLFTDevice  extends BaseDevice {
     }
 
 
-
     /**
-     *
-     * @Param  registerTypeId 寄存器类型
-     * @Param  dataTypeId 数据类型
-     * @Param  address 寄存器地址
-     * @Param  unitId 设备号
-     * @Param  quantity 寄存器个数
+     * @Param registerTypeId 寄存器类型
+     * @Param dataTypeId 数据类型
+     * @Param address 寄存器地址
+     * @Param unitId 设备号
+     * @Param quantity 寄存器个数
      */
-    public static Object readDevInfo(int  registerTypeId, int  dataTypeId,  int address, int unitId, int quantity) throws Exception {
+    private Object readDevInfo(int registerTypeId, int dataTypeId, int address, int unitId, int quantity) throws Exception {
         address = Math.max(0, address - 1);
 
         if (registerTypeId == 1) {// 读写线圈
@@ -169,7 +167,7 @@ public class RLFTDevice  extends BaseDevice {
                 ByteBuf buf = readCoilsResponse.getCoilStatus();
                 result = buf.readBoolean();
                 // number或boolean
-                if(result instanceof Boolean){
+                if (result instanceof Boolean) {
                     if ((boolean) result) {
                         result = 1;
                     } else {
@@ -186,7 +184,7 @@ public class RLFTDevice  extends BaseDevice {
             if (discreteInputsResponse != null) {
                 ByteBuf buf = discreteInputsResponse.getInputStatus();
                 // number或boolean
-                if(result instanceof Boolean){
+                if (result instanceof Boolean) {
                     if ((boolean) result) {
                         result = 1;
                     } else {
@@ -217,7 +215,7 @@ public class RLFTDevice  extends BaseDevice {
         return result;
     }
 
-    private static Object readDataByType(ByteBuf buf, int type) {
+    private Object readDataByType(ByteBuf buf, int type) {
         switch (type) {
             case 1: // 二进制
                 return ByteUtil.intToBinary(buf.readShort());
