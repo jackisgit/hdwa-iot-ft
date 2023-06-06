@@ -28,7 +28,7 @@
 
 
     <build>
-        <finalName>IEPC_SR_FT</finalName>
+        <finalName>IOT_EPC_FT</finalName>
     </build>
 
 </project>
