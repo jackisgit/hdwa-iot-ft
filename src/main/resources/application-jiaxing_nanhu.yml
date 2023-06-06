@@ -2,7 +2,7 @@
 epc:
   gatewayId: FT
   gcId: 3304020130
-  subsystem: ft/
+  subsystem: dtxt/
   unitIdCount: 25
   threadNum: 1
 modbus:
