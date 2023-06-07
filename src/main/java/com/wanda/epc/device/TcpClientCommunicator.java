@@ -2,6 +2,7 @@ package com.wanda.epc.device;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -27,8 +28,10 @@ public class TcpClientCommunicator {
     private boolean isContinueOpenAfterUse = true;
 
     private long waitReadTime = 500;
-    private String serverIP = "192.168.0.3";
-    private int port = 502;
+    @Value("${modbus.serverIP}")
+    private String serverIP;
+    @Value("${modbus.port}")
+    private int port;
     private String communicatorName;
     private static Object lockObj = new Object();
     //	private Logger				logger					= Logger.getLogger(this.getClass().getName());

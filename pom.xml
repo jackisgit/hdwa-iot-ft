@@ -4,12 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.wanda.epc</groupId>
-        <artifactId>iot_epc</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <artifactId>iot_epc_dependencies</artifactId>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>iot_epc_ft</artifactId>
     <name>iot_epc_ft</name>
+    <version>1.0.0-R20230606</version>
 
 
     <dependencies>
@@ -22,7 +23,7 @@
 
 
     <build>
-        <finalName>IEPC_PX_FT</finalName>
+        <finalName>IOT_EPC_FT_otis_modbus</finalName>
     </build>
 
 </project>

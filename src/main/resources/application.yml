@@ -1,20 +1,20 @@
+server:
+  port: 8101
 mqtt:
 #  hostUrl: tcp://10.199.209.131:1883
-  hostUrl: tcp://10.199.11.110:1883
+  hostUrl: tcp://127.0.0.1:1883
   username: admin
   password: public
-  client-id: IOT-EPC-Pj3505030030-${spring.profiles.active}
+  client-id: IOT-EPC-FT
   cleanSession: true
   reconnect: true
   keepAlive: 100
   isOpen: true
   qos: 1
-  sendtopic: project/gcId/report
-  setdownTopic: cloud/gcid/setdown
 
 spring:
   profiles:
-    active: ft
+    active: quanzhou_puxi
     #redis配置
   redis:
     host: 10.60.7.50
