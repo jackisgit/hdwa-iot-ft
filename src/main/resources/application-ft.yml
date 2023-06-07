@@ -1,0 +1,11 @@
+server:
+  port: 8101
+#广场ID及GatewayId
+epc:
+  gatewayId: FT
+  gcId: 3505030030
+  subsystem: ft/
+modbus:
+  serverIP: 192.168.0.3
+  port: 502
+beanName: otisTcpFT
