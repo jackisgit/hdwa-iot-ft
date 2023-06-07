@@ -28,7 +28,7 @@
 
 
     <build>
-        <finalName>IOT_EPC_FT</finalName>
+        <finalName>IOT_EPC_FT_hitachi_V1.0.0.12</finalName>
     </build>
 
 </project>

@@ -12,6 +12,8 @@ mqtt:
   isOpen: true
   qos: 1
 spring:
+  profiles:
+    active: shangrao
   redis:
     host: 127.0.0.1
     port: 16379
