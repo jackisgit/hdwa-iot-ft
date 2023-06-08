@@ -10,6 +10,7 @@
 
     <artifactId>iot_epc_ft</artifactId>
     <name>iot_epc_ft</name>
+    <version>1.0.0-R20230606</version>
 
     <dependencies>
         <dependency>
@@ -26,7 +27,7 @@
     </dependencies>
 
     <build>
-        <finalName>IOT_EPC_FT</finalName>
+        <finalName>IOT_EPC_FT_Mitsubishi_TCP</finalName>
     </build>
 
 </project>
