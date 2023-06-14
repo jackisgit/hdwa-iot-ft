@@ -1,0 +1,10 @@
+#广场ID及GatewayId
+epc:
+  gatewayId: FT
+  gcId: 1501050050
+  subsystem: dtxt/
+  unitIdCount: 25
+  threadNum: 1
+modbus:
+  serverIP: 192.168.1.59
+  port: 6001
