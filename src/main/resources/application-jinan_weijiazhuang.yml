@@ -3,8 +3,8 @@ epc:
   gatewayId: FT
   gcId: 3701030060
   subsystem: dtxt/
-  unitIdCount: 25
+  unitIdCount: 38
   threadNum: 1
 modbus:
   serverIP: 10.8.14.116
-  port: 6001
+  port: 11567

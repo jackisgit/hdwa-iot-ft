@@ -13,7 +13,7 @@ mqtt:
   qos: 1
 spring:
   profiles:
-    active: shangrao
+    active: jinan_weijiazhuang
   redis:
     host: 127.0.0.1
     port: 16379
