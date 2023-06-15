@@ -6,7 +6,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * ModbusTcp协议
  *
- * @author Bo
+ * @author 孙率众
  */
 public class ModbusTcp {
 

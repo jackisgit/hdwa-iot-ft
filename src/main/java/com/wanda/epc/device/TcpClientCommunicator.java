@@ -14,7 +14,7 @@ import java.nio.channels.SocketChannel;
 /**
  * TCP/IP 通信
  *
- * @author Bo
+ * @author 孙率众
  */
 @Service
 public class TcpClientCommunicator {

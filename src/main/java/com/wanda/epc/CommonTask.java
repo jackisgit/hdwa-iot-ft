@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 /**
  * @program: iot_epc
  * @description: 奥特斯直梯
- * @author: liuruishuo
+ * @author: 孙率众
  * @create: 2023-01-29 17:07
  **/
 @Configuration
