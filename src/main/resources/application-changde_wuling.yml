@@ -3,9 +3,10 @@ epc:
   gatewayId: ZT
   gcId: 4307020030
   subsystem: dtxt/
-  unitIdCount: 25
+  unitIdCount: 45
   threadNum: 1
 modbus:
   serverIP: 10.10.49.90
-  port: 10000
+  port: 11568
+
 

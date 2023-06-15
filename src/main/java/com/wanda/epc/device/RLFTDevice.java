@@ -132,7 +132,7 @@ public class RLFTDevice extends BaseDevice {
                 }
                 logger.info(unitId + "号扶梯" + "YXZT:" + yxzt + " SXZT:" + sxzt + " XXZT:" + xxzt);
             } catch (Exception e) {
-                logger.info("采集{}号扶梯数据失败", unitId);
+                logger.info("采集{}号扶梯数据失败", unitId, e);
             }
 
         }
