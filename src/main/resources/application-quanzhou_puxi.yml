@@ -3,6 +3,7 @@ epc:
   gatewayId: FT
   gcId: 3505030030
   subsystem: dtxt/
+  threadNum: 1
 modbus:
   serverIP: 192.168.0.3
   port: 502
