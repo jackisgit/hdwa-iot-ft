@@ -1,0 +1,10 @@
+#广场ID及GatewayId
+epc:
+  gatewayId: ZT
+  gcId: 3415024000
+  subsystem: dtxt/
+  unitIdCount: 17
+  threadNum: 1
+modbus:
+  serverIP: 10.117.49.104
+  port: 502
