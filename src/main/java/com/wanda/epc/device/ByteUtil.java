@@ -508,13 +508,4 @@ public class ByteUtil {
         return binStr.toString();
     }
 
-    public static void main(String[] args) {
-        String lc = "-1";
-        String lc1 = "01";
-        System.out.println(Integer.valueOf(lc));
-        System.out.println(Integer.valueOf(lc1));
-
-
-    }
-
 }
