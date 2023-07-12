@@ -1,13 +1,13 @@
 package com.wanda.epc.device;
 
 import com.wanda.epc.param.DeviceMessage;
-import com.wanda.epc.param.DispatchResult;
 import com.wanda.epc.util.DAPCUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 
@@ -29,38 +29,29 @@ public class OtisTcpFT extends BaseDevice {
 
     private final static Logger logger = LoggerFactory.getLogger(CommonDevice.class);
 
-    private InetSocketAddress socketAddress;
-
-    private SocketChannel sckChannel;
-
     @Autowired
     private TcpClientCommunicator communicator;
 
     @Override
     public void sendMessage(DeviceMessage dm) {
-        //更新redis
-
-        //如果数据变化则，发送emqx
-        if (dm != null){
-            commonDevice.sendMessage(dm);
-        }
+        commonDevice.sendMessage(dm);
     }
 
     @Override
     public boolean processData() throws Exception {
-        if (modbusAddr >2)
+        if (modbusAddr > 2)
             modbusAddr = 1;
         int index = 300;
         if (this.modbusAddr == 2)
             index = 415;
         boolean isSuccess = false;
-        byte[] receiveBuff = (byte[])null;
-        byte[] msgbuff = (byte[])null;
+        byte[] receiveBuff = (byte[]) null;
+        byte[] msgbuff = (byte[]) null;
         try {
             receiveBuff = this.communicator.writeAndReadBuffer(
                     this.modbusTcp.sendReadBuff(this.modbusAddr, 3, index, 115), true);
             msgbuff = this.modbusTcp.parseReceiveBuff(this.modbusAddr, 3, 230, receiveBuff);
-            logger.info("msgbuff"+ DAPCUtil.toHex(msgbuff));
+            logger.info("msgbuff" + DAPCUtil.toHex(msgbuff));
             if (msgbuff != null) {
                 int len = msgbuff.length;
                 if (len % 10 == 0) {
@@ -99,19 +90,14 @@ public class OtisTcpFT extends BaseDevice {
                             deviceMessageSXZT.setValue(SXZT);
                             sendMessage(deviceMessageSXZT);
                         }
-                        DeviceMessage deviceMessageLC = deviceParamMap.get("LC" + String.valueOf(jxbuff[0]));
-                        if (deviceMessageLC != null) {
-                            deviceMessageLC.setValue(LC);
-                            sendMessage(deviceMessageLC);
-                        }
                         DeviceMessage deviceMessageXTZT = deviceParamMap.get("XTZT" + String.valueOf(jxbuff[0]));
                         if (deviceMessageXTZT != null) {
                             deviceMessageXTZT.setValue(XTZT);
                             sendMessage(deviceMessageXTZT);
                         }
-                        logger.info("jxbuff"+ DAPCUtil.toHex(jxbuff));
+                        logger.info("jxbuff" + DAPCUtil.toHex(jxbuff));
                         logger.info("YXZT" + String.valueOf(jxbuff[0]));
-                        logger.info(String.valueOf(jxbuff[0]) +"号扶梯"+ "YXZT:" + YXZT + " GZZT:" + GZZT + " SXZT:" + SXZT + " XTZT:" + XTZT + " LC:" + LC);
+                        logger.info(String.valueOf(jxbuff[0]) + "号扶梯" + "YXZT:" + YXZT + " GZZT:" + GZZT + " SXZT:" + SXZT + " XTZT:" + XTZT + " LC:" + LC);
                     }
                 } else {
                     logger.info("+ msgbuff");
@@ -119,27 +105,13 @@ public class OtisTcpFT extends BaseDevice {
             }
             modbusAddr++;
         } catch (Exception e) {
-            e.printStackTrace();
-            this.logger.info(String.valueOf(this.modbusAddr));
+            logger.error(String.valueOf(this.modbusAddr), e);
         }
         return false;
     }
 
-    public static String ascii2String(String ASCIIs) {
-        String[] ASCIIss = ASCIIs.split(",");
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < ASCIIss.length; i++)
-            sb.append(ascii2Char(Integer.parseInt(ASCIIss[i])));
-        return sb.toString();
-    }
-
-    public static char ascii2Char(int ASCII) {
-        return (char)ASCII;
-    }
-
-
     @Override
-    public void dispatchCommand(String meter, Integer funcid, String value, String message) throws Exception{
+    public void dispatchCommand(String meter, Integer funcid, String value, String message) throws Exception {
     }
 
     @Override

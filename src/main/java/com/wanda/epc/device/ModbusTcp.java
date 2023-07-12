@@ -1,5 +1,6 @@
 package com.wanda.epc.device;
 
+import com.wanda.epc.util.DAPCUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -166,62 +167,6 @@ public class ModbusTcp {
         return parsedBuff;
     }
 
-
-    /**
-     * 解析 返回的字符串
-     * 功能码 1 不适用，3 试用
-     *
-     * @param address     设备地址
-     * @param funCode     功能码
-     * @param length      数据长度
-     * @param receiveBuff 返回的数据
-     * @return
-     * @throws Exception
-     */
-    public byte[] parseReceive1Buff(int address, int funCode, int length,
-                                    byte[] receiveBuff) throws Exception {
-
-        byte[] parsedBuff = null;
-        int len = receiveBuff.length;
-        int lengthT = length / 8 + 9;
-        if (len >= lengthT) {
-            byte addr = receiveBuff[6];
-            byte code = receiveBuff[7];
-            byte leth = receiveBuff[8];
-            if (addr == (byte) address) {
-                if (code == (byte) funCode) {
-                    if (leth >= (byte) (length / 8)) {
-                        int datalen = DAPCUtil.byteToUnsigned(receiveBuff[8]);
-                        parsedBuff = new byte[datalen];
-                        System.arraycopy(receiveBuff, 9, parsedBuff, 0, datalen);
-                    }
-                }
-            } else {
-                // 设备回应的功能代码和请求功能代码不一致
-                byte errCode = receiveBuff[2];
-                String strErrMsg = "";
-                switch (errCode) {
-                    case 1:
-                        strErrMsg = "ILLEGAL_FUNCTION";// 非法的功能码
-                    case 2:
-                        strErrMsg = "ILLEGAL_DATA_ADDRESS";// 请求访问的数据地址非法
-                    case 3:
-                        strErrMsg = "ILLEGAL_DATA_VALUE";// 请求信文的数据非法
-                    case 4:
-                        strErrMsg = "SLAVE_DEVICE_FAILURE";// 当从站响应请求时，发生不可恢复的故障
-                    case 5:
-                        strErrMsg = "ACKNOWLWDGE";// 从站处理该主站的请求需要较长的时间
-                    case 6:
-                        strErrMsg = "SLAVE_DEVICE_BUSY"; // 从站忙，暂时无法响应该请求，请稍后重发
-                    default:
-                        strErrMsg = "function code reply error";
-                }
-                throw new Exception(strErrMsg);
-            }
-        }
-        // 返回解析过的
-        return parsedBuff;
-    }
 
 
     /**
