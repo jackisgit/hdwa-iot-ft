@@ -125,11 +125,6 @@ public class RLFTDevice extends BaseDevice {
                     }
                     sendMessage(deviceMessageFaultStatus);
                 }
-                DeviceMessage deviceMessageAccRunTime = deviceParamMap.get(unitId + "_accRunTime");
-                if (deviceMessageAccRunTime != null) {
-                    deviceMessageAccRunTime.setValue("0");
-                    sendMessage(deviceMessageAccRunTime);
-                }
                 logger.info(unitId + "号扶梯" + "YXZT:" + yxzt + " SXZT:" + sxzt + " XXZT:" + xxzt);
             } catch (Exception e) {
                 logger.info("采集{}号扶梯数据失败", unitId, e);
