@@ -7,4 +7,3 @@ epc:
 modbus:
   serverIP: 192.168.0.3
   port: 502
-beanName: otisTcpFT

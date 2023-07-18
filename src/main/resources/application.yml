@@ -1,7 +1,6 @@
 server:
   port: 8101
 mqtt:
-#  hostUrl: tcp://10.199.209.131:1883
   hostUrl: tcp://127.0.0.1:1883
   username: admin
   password: public
@@ -20,5 +19,7 @@ spring:
     host: 10.60.7.50
     port: 16379
     password:
+
+beanName: otisTcpFT
 
 

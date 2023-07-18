@@ -23,7 +23,7 @@
 
 
     <build>
-        <finalName>IOT_EPC_FT_otis_modbus</finalName>
+        <finalName>IOT_EPC_FT_otis_${version}</finalName>
     </build>
 
 </project>
