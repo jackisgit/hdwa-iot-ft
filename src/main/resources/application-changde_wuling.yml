@@ -1,6 +1,6 @@
 #广场ID及GatewayId
 epc:
-  gatewayId: ZT
+  gatewayId: FT
   gcId: 4307020030
   subsystem: dtxt/
   unitIdCount: 45

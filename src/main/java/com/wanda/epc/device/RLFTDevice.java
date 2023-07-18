@@ -78,10 +78,7 @@ public class RLFTDevice extends BaseDevice {
 
     @Override
     public void sendMessage(DeviceMessage dm) {
-        //如果数据变化则，发送emqx
-        if (dm != null) {
-            commonDevice.sendMessage(dm);
-        }
+        commonDevice.sendMessage(dm);
     }
 
     @Override
