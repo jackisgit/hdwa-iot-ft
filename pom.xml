@@ -27,7 +27,7 @@
     </dependencies>
 
     <build>
-        <finalName>IOT_EPC_FT_Mitsubishi_TCP</finalName>
+        <finalName>IOT_EPC_FT_Mitsubishi_${version}</finalName>
     </build>
 
 </project>
