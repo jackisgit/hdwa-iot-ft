@@ -21,16 +21,8 @@ public class SLFTDevice  extends BaseDevice {
 
     private final static Logger logger = LoggerFactory.getLogger(SLFTDevice.class);
 
-
     @Autowired
     CommonDevice commonDevice;
-
-    @Value("${epc.gcId}")
-    private String gcId;
-
-    @Value("${epc.gatewayId}")
-    private String gatewayId;
-
 
     /**
      * 解析一个电梯的数据
