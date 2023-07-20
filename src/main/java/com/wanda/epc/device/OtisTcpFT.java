@@ -8,9 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.net.InetSocketAddress;
-import java.nio.channels.SocketChannel;
-
 /**
  * @author 孙率众
  * @version 1.0
@@ -95,17 +92,13 @@ public class OtisTcpFT extends BaseDevice {
                             deviceMessageXTZT.setValue(XTZT);
                             sendMessage(deviceMessageXTZT);
                         }
-                        logger.info("jxbuff" + DAPCUtil.toHex(jxbuff));
-                        logger.info("YXZT" + String.valueOf(jxbuff[0]));
                         logger.info(String.valueOf(jxbuff[0]) + "号扶梯" + "YXZT:" + YXZT + " GZZT:" + GZZT + " SXZT:" + SXZT + " XTZT:" + XTZT + " LC:" + LC);
                     }
-                } else {
-                    logger.info("+ msgbuff");
                 }
             }
             modbusAddr++;
         } catch (Exception e) {
-            logger.error(String.valueOf(this.modbusAddr), e);
+            logger.error(this.modbusAddr + "采集失败", e);
         }
         return false;
     }
