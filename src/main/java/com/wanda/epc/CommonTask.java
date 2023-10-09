@@ -11,6 +11,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -24,6 +25,7 @@ import org.springframework.scheduling.annotation.Scheduled;
  **/
 @Configuration
 @EnableScheduling
+@Slf4j
 public class CommonTask {
 
     private static byte[] base = {(byte) 0x00, (byte) 0x04, (byte) 0xe0, (byte) 0x1b};
@@ -62,7 +64,7 @@ public class CommonTask {
             future.channel().writeAndFlush(byteBufMsg);
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.error("初始化异常：", e);
         } finally {
             workerGroup.shutdownGracefully();
         }
