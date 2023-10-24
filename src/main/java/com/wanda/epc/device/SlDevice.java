@@ -6,20 +6,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Liurs
  * @project iot-epc-module
- * @description 日历扶梯采集器
+ * @description 电梯采集器
  * @date 2023/03/02 15:44:36
  */
 @Slf4j
 @Component
-public class SLFTDevice  extends BaseDevice {
+public class SlDevice extends BaseDevice {
 
-    private final static Logger logger = LoggerFactory.getLogger(SLFTDevice.class);
+    private final static Logger logger = LoggerFactory.getLogger(SlDevice.class);
 
     @Autowired
     CommonDevice commonDevice;
@@ -29,27 +28,27 @@ public class SLFTDevice  extends BaseDevice {
      */
     public void oneInfo(byte[] info) {
         int num = (info[0] & 0xff) & 0x3f;
-        logger.info("扶梯编号：" + num);
-        String SXZT= "";
-        String XTZT= "";
-        String YXZT= "";
-        String faultStatus= "";
+        logger.info("电梯编号：" + num);
+        String SXZT = "";
+        String XTZT = "";
+        String YXZT = "";
+        String faultStatus = "";
         //电梯编号 info[1] 上下行 （停止）	bit7~6  00 停止，10上行，01下行
         switch ((info[1] & 0xff) >> 6) {
             case 0:
-                logger.info("扶梯停止");
+                logger.info("电梯停止");
                 SXZT = "0";
                 XTZT = "0";
                 YXZT = "0";
                 break;
             case 1:
-                logger.info("扶梯上行");
+                logger.info("电梯上行");
                 SXZT = "0";
                 XTZT = "1";
                 YXZT = "1";
                 break;
             case 2:
-                logger.info("扶梯下行");
+                logger.info("电梯下行");
                 SXZT = "1";
                 XTZT = "0";
                 YXZT = "1";

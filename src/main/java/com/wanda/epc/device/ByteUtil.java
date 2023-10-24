@@ -944,16 +944,17 @@ public class ByteUtil {
 
     /**
      * 字节数组转换为16进制字符串
+     *
      * @param src
      * @return
      */
-    public static String bytes2Str(byte[] src){
+    public static String bytes2Str(byte[] src) {
         StringBuilder stringBuilder = new StringBuilder("");
         if (src == null || src.length <= 0) {
             return null;
         }
         for (int i = 0; i < src.length; i++) {
-            if(i>0){
+            if (i > 0) {
                 stringBuilder.append(" ");
             }
             int v = src[i] & 0xFF;
