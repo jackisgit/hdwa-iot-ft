@@ -19,8 +19,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 
@@ -35,37 +37,27 @@ import java.util.concurrent.CompletableFuture;
 public class RLFTDevice extends BaseDevice {
 
     private final static Logger logger = LoggerFactory.getLogger(RLFTDevice.class);
-
-
+    private static ModbusTcpMaster master;
+    private static Object result = null;
+    private static int registerTypeId = 3;
+    private static int dataTypeId = 3;
     @Autowired
     CommonDevice commonDevice;
-
     /**
      * ModbusIp
      */
     @Value("${modbus.serverIP}")
     private String serverIp;
-
     /**
      * ModbusPort
      */
     @Value("${modbus.port}")
     private Integer port;
-
     /**
      * 电梯最大编号，用作遍历查询
      */
     @Value("${epc.unitIdCount}")
     private Integer unitIdCount;
-
-    private static ModbusTcpMaster master;
-
-    private static Object result = null;
-
-    private static int registerTypeId = 3;
-
-    private static int dataTypeId = 3;
-
 
     @PostConstruct
     public void init() {
@@ -78,7 +70,10 @@ public class RLFTDevice extends BaseDevice {
 
     @Override
     public void sendMessage(DeviceMessage dm) {
-        commonDevice.sendMessage(dm);
+        //如果数据变化则，发送emqx
+        if (dm != null) {
+            commonDevice.sendMessage(dm);
+        }
     }
 
     @Override
@@ -98,29 +93,36 @@ public class RLFTDevice extends BaseDevice {
                 String[] f = faultStatus.split("\\s+");
                 String fault = ByteUtil.decimalToBinary(ByteUtil.hexStringToInt(f[0]), 8);
                 String gz = String.valueOf(fault.charAt(7));
-                DeviceMessage deviceMessageSXZT = deviceParamMap.get(unitId + "_wD_shifoushangxing");
-                if (deviceMessageSXZT != null) {
-                    deviceMessageSXZT.setValue(sxzt);
-                    sendMessage(deviceMessageSXZT);
+                List<DeviceMessage> deviceMessageSXZT = deviceParamListMap.get(unitId + "_wD_shifoushangxing");
+                if (!CollectionUtils.isEmpty(deviceMessageSXZT)) {
+                    deviceMessageSXZT.forEach(deviceMessage -> {
+                        deviceMessage.setValue(sxzt);
+                        sendMessage(deviceMessage);
+                    });
                 }
-                DeviceMessage deviceMessageXTZT = deviceParamMap.get(unitId + "_wD_shifouxiaxing");
-                if (deviceMessageXTZT != null) {
-                    deviceMessageXTZT.setValue(xxzt);
-                    sendMessage(deviceMessageXTZT);
+
+                List<DeviceMessage> deviceMessageXXZT = deviceParamListMap.get(unitId + "_wD_shifouxiaxing");
+                if (!CollectionUtils.isEmpty(deviceMessageXXZT)) {
+                    deviceMessageXXZT.forEach(deviceMessage -> {
+                        deviceMessage.setValue(xxzt);
+                        sendMessage(deviceMessage);
+                    });
+
                 }
-                DeviceMessage deviceMessageYXZT = deviceParamMap.get(unitId + "_runStatus");
-                if (deviceMessageYXZT != null) {
-                    deviceMessageYXZT.setValue(yxzt);
-                    sendMessage(deviceMessageYXZT);
+                List<DeviceMessage> deviceMessageYXZT = deviceParamListMap.get(unitId + "_runStatus");
+                if (!CollectionUtils.isEmpty(deviceMessageYXZT)) {
+                    deviceMessageYXZT.forEach(deviceMessage -> {
+                        deviceMessage.setValue(yxzt);
+                        sendMessage(deviceMessage);
+                    });
                 }
-                DeviceMessage deviceMessageFaultStatus = deviceParamMap.get(unitId + "_faultStatus");
-                if (deviceMessageFaultStatus != null) {
-                    if (gz.equals("0")) {
-                        deviceMessageFaultStatus.setValue("0");
-                    } else {
-                        deviceMessageFaultStatus.setValue("1");
-                    }
-                    sendMessage(deviceMessageFaultStatus);
+
+                List<DeviceMessage> deviceMessageFaultStatus = deviceParamListMap.get(unitId + "_faultStatus");
+                if (!CollectionUtils.isEmpty(deviceMessageFaultStatus)) {
+                    deviceMessageFaultStatus.forEach(deviceMessage -> {
+                        deviceMessage.setValue(yxzt);
+                        sendMessage(deviceMessage);
+                    });
                 }
                 logger.info(unitId + "号扶梯" + "YXZT:" + yxzt + " SXZT:" + sxzt + " XXZT:" + xxzt);
             } catch (Exception e) {
