@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -66,6 +67,12 @@ public class RLFTDevice extends BaseDevice {
                 setPort(port).
                 build();
         master = new ModbusTcpMaster(config);
+        master.connect();
+    }
+
+    @PreDestroy
+    public void close() {
+        master.disconnect();
     }
 
     @Override
@@ -74,6 +81,21 @@ public class RLFTDevice extends BaseDevice {
         if (dm != null) {
             commonDevice.sendMessage(dm);
         }
+    }
+
+    private static String hexString2binaryString(String hexString) {
+        // 将16进制数转换为对应的整数
+        int decimalNumber = Integer.parseInt(hexString, 16);
+        // 将整数转换为2进制字符串
+        String binaryNumber = Integer.toBinaryString(decimalNumber);
+        while (binaryNumber.length() < 16) {
+            binaryNumber = "0" + binaryNumber;
+        }
+        return binaryNumber;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(hexString2binaryString("0400"));
     }
 
     @Override
@@ -120,11 +142,11 @@ public class RLFTDevice extends BaseDevice {
                 List<DeviceMessage> deviceMessageFaultStatus = deviceParamListMap.get(unitId + "_faultStatus");
                 if (!CollectionUtils.isEmpty(deviceMessageFaultStatus)) {
                     deviceMessageFaultStatus.forEach(deviceMessage -> {
-                        deviceMessage.setValue(yxzt);
+                        deviceMessage.setValue(gz);
                         sendMessage(deviceMessage);
                     });
                 }
-                logger.info(unitId + "号扶梯" + "YXZT:" + yxzt + " SXZT:" + sxzt + " XXZT:" + xxzt);
+                logger.info(unitId + "号扶梯" + "YXZT:" + yxzt + " SXZT:" + sxzt + " XXZT:" + xxzt + " GZZT:" + gz);
             } catch (Exception e) {
                 logger.error("采集{}号扶梯数据失败", unitId, e);
             }
