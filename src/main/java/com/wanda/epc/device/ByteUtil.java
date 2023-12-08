@@ -1,7 +1,9 @@
 package com.wanda.epc.device;
 
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
 
@@ -10,8 +12,6 @@ public class ByteUtil {
 //	private static ByteBuffer buffer = ByteBuffer.allocate(8);
 
     /**
-     *
-     *
      * @param x
      * @return
      */
@@ -62,7 +62,7 @@ public class ByteUtil {
     /**
      * 字节转换为浮点
      *
-     * @param b 字节（至少4个字节）
+     * @param b     字节（至少4个字节）
      * @param index 开始位置
      * @return
      */
@@ -169,8 +169,8 @@ public class ByteUtil {
     }
 
     public static byte[] intToByteArray(int a, int len) {
-        byte[] ret = new byte[] { (byte) ((a >> 24) & 0xFF), (byte) ((a >> 16) & 0xFF), (byte) ((a >> 8) & 0xFF),
-                (byte) (a & 0xFF) };
+        byte[] ret = new byte[]{(byte) ((a >> 24) & 0xFF), (byte) ((a >> 16) & 0xFF), (byte) ((a >> 8) & 0xFF),
+                (byte) (a & 0xFF)};
         byte[] dest = new byte[len];
         System.arraycopy(ret, 4 - len, dest, 0, len);
         return dest;
@@ -291,40 +291,6 @@ public class ByteUtil {
             ret[i] = data[start + i];
         }
         return ret;
-    }
-
-    /**
-     * 娴佽浆鎹负byte[]
-     *
-     * @param inStream
-     * @return
-     */
-    public static byte[] readInputStream(InputStream inStream) {
-        ByteArrayOutputStream outStream = null;
-        try {
-            outStream = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            byte[] data = null;
-            int len = 0;
-            while ((len = inStream.read(buffer)) != -1) {
-                outStream.write(buffer, 0, len);
-            }
-            data = outStream.toByteArray();
-            return data;
-        } catch (IOException e) {
-            return null;
-        } finally {
-            try {
-                if (outStream != null) {
-                    outStream.close();
-                }
-                if (inStream != null) {
-                    inStream.close();
-                }
-            } catch (IOException e) {
-                return null;
-            }
-        }
     }
 
     /**
@@ -493,16 +459,17 @@ public class ByteUtil {
 
     /**
      * 十进制数转为2进制数
-     * @param num 十进制数
+     *
+     * @param num  十进制数
      * @param size 返回的位数 （可以根据自己需求设置）
      * @return
      */
     public static String decimalToBinary(int num, int size) {
-        if (size <(Integer.SIZE - Integer.numberOfLeadingZeros(num))) {
-            throw  new RuntimeException("传入size小于num二进制位数");
+        if (size < (Integer.SIZE - Integer.numberOfLeadingZeros(num))) {
+            throw new RuntimeException("传入size小于num二进制位数");
         }
         StringBuilder binStr = new StringBuilder();
-        for(int i = size-1;i >= 0; i--){
+        for (int i = size - 1; i >= 0; i--) {
             binStr.append(num >>> i & 1);
         }
         return binStr.toString();

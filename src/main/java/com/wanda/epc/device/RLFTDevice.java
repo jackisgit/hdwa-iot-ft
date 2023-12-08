@@ -60,6 +60,17 @@ public class RLFTDevice extends BaseDevice {
     @Value("${epc.unitIdCount}")
     private Integer unitIdCount;
 
+    private static String hexString2binaryString(String hexString) {
+        // 将16进制数转换为对应的整数
+        int decimalNumber = Integer.parseInt(hexString, 16);
+        // 将整数转换为2进制字符串
+        String binaryNumber = Integer.toBinaryString(decimalNumber);
+        while (binaryNumber.length() < 16) {
+            binaryNumber = "0" + binaryNumber;
+        }
+        return binaryNumber;
+    }
+
     @PostConstruct
     public void init() {
         ModbusTcpMasterConfig config = new ModbusTcpMasterConfig.
@@ -81,21 +92,6 @@ public class RLFTDevice extends BaseDevice {
         if (dm != null) {
             commonDevice.sendMessage(dm);
         }
-    }
-
-    private static String hexString2binaryString(String hexString) {
-        // 将16进制数转换为对应的整数
-        int decimalNumber = Integer.parseInt(hexString, 16);
-        // 将整数转换为2进制字符串
-        String binaryNumber = Integer.toBinaryString(decimalNumber);
-        while (binaryNumber.length() < 16) {
-            binaryNumber = "0" + binaryNumber;
-        }
-        return binaryNumber;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(hexString2binaryString("0400"));
     }
 
     @Override
