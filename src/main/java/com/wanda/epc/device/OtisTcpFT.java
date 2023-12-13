@@ -7,6 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * @author 孙率众
@@ -20,12 +23,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class OtisTcpFT extends BaseDevice {
 
-    private ModbusTcp modbusTcp = new ModbusTcp();
-
-    private int modbusAddr = 1;
-
     private final static Logger logger = LoggerFactory.getLogger(CommonDevice.class);
-
+    private ModbusTcp modbusTcp = new ModbusTcp();
+    private int modbusAddr = 1;
     @Autowired
     private TcpClientCommunicator communicator;
 
@@ -36,18 +36,17 @@ public class OtisTcpFT extends BaseDevice {
 
     @Override
     public boolean processData() throws Exception {
-        if (modbusAddr > 2)
+        if (modbusAddr > 2) {
             modbusAddr = 1;
+        }
         int index = 300;
-        if (this.modbusAddr == 2)
+        if (this.modbusAddr == 2) {
             index = 415;
-        boolean isSuccess = false;
-        byte[] receiveBuff = (byte[]) null;
-        byte[] msgbuff = (byte[]) null;
+        }
         try {
-            receiveBuff = this.communicator.writeAndReadBuffer(
+            byte[] receiveBuff = this.communicator.writeAndReadBuffer(
                     this.modbusTcp.sendReadBuff(this.modbusAddr, 3, index, 115), true);
-            msgbuff = this.modbusTcp.parseReceiveBuff(this.modbusAddr, 3, 230, receiveBuff);
+            byte[] msgbuff = this.modbusTcp.parseReceiveBuff(this.modbusAddr, 3, 230, receiveBuff);
             logger.info("msgbuff" + DAPCUtil.toHex(msgbuff));
             if (msgbuff != null) {
                 int len = msgbuff.length;
@@ -72,25 +71,37 @@ public class OtisTcpFT extends BaseDevice {
                             GZZT = "1";
                         }
                         i += 10;
-                        DeviceMessage deviceMessageYXZT = deviceParamMap.get("YXZT" + String.valueOf(jxbuff[0]));
-                        if (deviceMessageYXZT != null) {
-                            deviceMessageYXZT.setValue(YXZT);
-                            sendMessage(deviceMessageYXZT);
+                        List<DeviceMessage> deviceMessageYXZT = deviceParamListMap.get("YXZT" + String.valueOf(jxbuff[0]));
+                        if (!CollectionUtils.isEmpty(deviceMessageYXZT)) {
+                            String finalYXZT = YXZT.trim();
+                            deviceMessageYXZT.forEach(deviceMessage -> {
+                                deviceMessage.setValue(finalYXZT);
+                                sendMessage(deviceMessage);
+                            });
                         }
-                        DeviceMessage deviceMessageGZZT = deviceParamMap.get("GZZT" + String.valueOf(jxbuff[0]));
-                        if (deviceMessageGZZT != null) {
-                            deviceMessageGZZT.setValue(GZZT);
-                            sendMessage(deviceMessageGZZT);
+                        List<DeviceMessage> deviceMessageGZZT = deviceParamListMap.get("GZZT" + String.valueOf(jxbuff[0]));
+                        if (!CollectionUtils.isEmpty(deviceMessageGZZT)) {
+                            String finalGZZT = GZZT.trim();
+                            deviceMessageGZZT.forEach(deviceMessage -> {
+                                deviceMessage.setValue(finalGZZT);
+                                sendMessage(deviceMessage);
+                            });
                         }
-                        DeviceMessage deviceMessageSXZT = deviceParamMap.get("SXZT" + String.valueOf(jxbuff[0]));
-                        if (deviceMessageSXZT != null) {
-                            deviceMessageSXZT.setValue(SXZT);
-                            sendMessage(deviceMessageSXZT);
+                        List<DeviceMessage> deviceMessageSXZT = deviceParamListMap.get("SXZT" + String.valueOf(jxbuff[0]));
+                        if (!CollectionUtils.isEmpty(deviceMessageSXZT)) {
+                            String finalSXZT = SXZT.trim();
+                            deviceMessageSXZT.forEach(deviceMessage -> {
+                                deviceMessage.setValue(finalSXZT);
+                                sendMessage(deviceMessage);
+                            });
                         }
-                        DeviceMessage deviceMessageXTZT = deviceParamMap.get("XTZT" + String.valueOf(jxbuff[0]));
-                        if (deviceMessageXTZT != null) {
-                            deviceMessageXTZT.setValue(XTZT);
-                            sendMessage(deviceMessageXTZT);
+                        List<DeviceMessage> deviceMessageXTZT = deviceParamListMap.get("XTZT" + String.valueOf(jxbuff[0]));
+                        if (!CollectionUtils.isEmpty(deviceMessageXTZT)) {
+                            String finalXTZT = XTZT.trim();
+                            deviceMessageXTZT.forEach(deviceMessage -> {
+                                deviceMessage.setValue(finalXTZT);
+                                sendMessage(deviceMessage);
+                            });
                         }
                         logger.info(String.valueOf(jxbuff[0]) + "号扶梯" + "YXZT:" + YXZT + " GZZT:" + GZZT + " SXZT:" + SXZT + " XTZT:" + XTZT + " LC:" + LC);
                     }
