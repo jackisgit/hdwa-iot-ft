@@ -127,10 +127,14 @@ public class RLFTDevice extends BaseDevice {
                     });
 
                 }
+                if ("1".equals(yxzt) || "1".equals(xxzt) || "1".equals(sxzt)) {
+                    yxzt = "1";
+                }
                 List<DeviceMessage> deviceMessageYXZT = deviceParamListMap.get(unitId + "_runStatus");
                 if (!CollectionUtils.isEmpty(deviceMessageYXZT)) {
+                    String finalYxzt = yxzt;
                     deviceMessageYXZT.forEach(deviceMessage -> {
-                        deviceMessage.setValue(yxzt);
+                        deviceMessage.setValue(finalYxzt);
                         sendMessage(deviceMessage);
                     });
                 }
