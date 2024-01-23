@@ -19,11 +19,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 
@@ -35,9 +33,13 @@ import java.util.concurrent.CompletableFuture;
  */
 @Slf4j
 @Service
-public class RLFTDevice extends BaseDevice {
+public class Device extends BaseDevice {
 
-    private final static Logger logger = LoggerFactory.getLogger(RLFTDevice.class);
+    public static final String WD_SHIFOUSHANGXING = "_wD_shifoushangxing";
+    public static final String WD_SHIFOUXIAXING = "_wD_shifouxiaxing";
+    public static final String RUN_STATUS = "_runStatus";
+    public static final String FAULT_STATUS = "_faultStatus";
+    private final static Logger logger = LoggerFactory.getLogger(Device.class);
     private static ModbusTcpMaster master;
     private static Object result = null;
     private static int registerTypeId = 3;
@@ -111,41 +113,13 @@ public class RLFTDevice extends BaseDevice {
                 String[] f = faultStatus.split("\\s+");
                 String fault = ByteUtil.decimalToBinary(ByteUtil.hexStringToInt(f[0]), 8);
                 String gz = String.valueOf(fault.charAt(7));
-                List<DeviceMessage> deviceMessageSXZT = deviceParamListMap.get(unitId + "_wD_shifoushangxing");
-                if (!CollectionUtils.isEmpty(deviceMessageSXZT)) {
-                    deviceMessageSXZT.forEach(deviceMessage -> {
-                        deviceMessage.setValue(sxzt);
-                        sendMessage(deviceMessage);
-                    });
-                }
-
-                List<DeviceMessage> deviceMessageXXZT = deviceParamListMap.get(unitId + "_wD_shifouxiaxing");
-                if (!CollectionUtils.isEmpty(deviceMessageXXZT)) {
-                    deviceMessageXXZT.forEach(deviceMessage -> {
-                        deviceMessage.setValue(xxzt);
-                        sendMessage(deviceMessage);
-                    });
-
-                }
+                sendMsg(unitId + WD_SHIFOUSHANGXING, sxzt);
+                sendMsg(unitId + WD_SHIFOUXIAXING, xxzt);
                 if ("1".equals(yxzt) || "1".equals(xxzt) || "1".equals(sxzt)) {
                     yxzt = "1";
                 }
-                List<DeviceMessage> deviceMessageYXZT = deviceParamListMap.get(unitId + "_runStatus");
-                if (!CollectionUtils.isEmpty(deviceMessageYXZT)) {
-                    String finalYxzt = yxzt;
-                    deviceMessageYXZT.forEach(deviceMessage -> {
-                        deviceMessage.setValue(finalYxzt);
-                        sendMessage(deviceMessage);
-                    });
-                }
-
-                List<DeviceMessage> deviceMessageFaultStatus = deviceParamListMap.get(unitId + "_faultStatus");
-                if (!CollectionUtils.isEmpty(deviceMessageFaultStatus)) {
-                    deviceMessageFaultStatus.forEach(deviceMessage -> {
-                        deviceMessage.setValue(gz);
-                        sendMessage(deviceMessage);
-                    });
-                }
+                sendMsg(unitId + RUN_STATUS, yxzt);
+                sendMsg(unitId + FAULT_STATUS, gz);
                 logger.info(unitId + "号扶梯" + "YXZT:" + yxzt + " SXZT:" + sxzt + " XXZT:" + xxzt + " GZZT:" + gz);
             } catch (Exception e) {
                 logger.error("采集{}号扶梯数据失败", unitId, e);

@@ -1,6 +1,6 @@
 server:
   port: 9320
-beanName: rLFTDevice
+beanName: device
 mqtt:
   hostUrl: tcp://127.0.0.1:1883
   username: admin
@@ -12,10 +12,19 @@ mqtt:
   isOpen: true
   qos: 1
 spring:
-  profiles:
-    active: jinan_weijiazhuang
   redis:
     host: 127.0.0.1
     port: 16379
     password:
+#广场ID及GatewayId
+epc:
+  gatewayId: FT
+  gcId: 4307020030
+  subsystem: dtxt/
+  unitIdCount: 45
+  threadNum: 1
+  cron: 0/30 * * * * ?
+modbus:
+  serverIP: 10.10.49.90
+  port: 11568
 

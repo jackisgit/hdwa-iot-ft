@@ -1,7 +1,7 @@
 package com.wanda.epc;
 
 
-import com.wanda.epc.device.RLFTDevice;
+import com.wanda.epc.device.Device;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -16,9 +16,9 @@ public class CommonTask {
 
 
     @Autowired
-    private RLFTDevice device;
+    private Device device;
 
-    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "${epc.cron:0/10 * * * * ?}")
     public boolean processData() throws Exception {
         return device.processData();
     }
