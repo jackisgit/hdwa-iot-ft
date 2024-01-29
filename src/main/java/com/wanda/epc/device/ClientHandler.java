@@ -19,7 +19,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     //数据类别 2：回应数据（DAT ） 数值：0xA0
     private static byte ctrl_Data = (byte) 0xa0;
 
-    private static SlDevice slDevice;
+    private static Device slDevice;
 
 
     @Override
@@ -44,7 +44,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                 byte[] temp = new byte[12];
                 for (int i = 3; i < buff.length - 12; i = i + 12) {
                     System.arraycopy(buff, i, temp, 0, 12);
-                    slDevice = SpringUtil.getBean(SlDevice.class);
+                    slDevice = SpringUtil.getBean(Device.class);
                     slDevice.oneInfo(temp);
                 }
             } else {

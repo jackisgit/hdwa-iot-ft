@@ -1,6 +1,6 @@
 server:
   port: 8101
-beanName: sLFTDevice
+beanName: device
 mqtt:
   hostUrl: tcp://127.0.0.1:1883
   username: admin
@@ -13,11 +13,17 @@ mqtt:
   qos: 1
 
 spring:
-  profiles:
-    active: chongqing_banan
   redis:
     host: 127.0.0.1
     port: 16379
     password:
-
+epc:
+  gatewayId: FT
+  gcId: 5001130030
+  subsystem: ft/
+  threadNum: 1
+  cron:
+tcp:
+  serverIP: 192.168.1.34
+  port: 60001
 
