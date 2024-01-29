@@ -18,14 +18,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 public class CommonTask {
 
     @Autowired
-    private OtisTcpFT device;// opc
+    private OtisTcpFT device;
 
-//    @Autowired
-//    private OtisTcpFTAddr otisTcpFTAddr;// opc
-
-    @Scheduled(cron = "0/30 * * * * ?")
+    @Scheduled(cron = "${epc.cron:0/30 * * * * ?}")
     public boolean processData() throws Exception {
-//        otisTcpFTAddr.processData();
         return device.processData();
     }
 

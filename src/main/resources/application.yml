@@ -12,8 +12,6 @@ mqtt:
   qos: 1
 
 spring:
-  profiles:
-    active: quanzhou_puxi
     #redis配置
   redis:
     host: 10.60.7.50
@@ -21,5 +19,16 @@ spring:
     password:
 
 beanName: otisTcpFT
+
+#广场ID及GatewayId
+epc:
+  gatewayId: FT
+  gcId: 3601130010
+  subsystem: dtxt/
+  threadNum: 1
+  cron: 0/30 * * * * ?
+modbus:
+  serverIP: 192.168.10.89
+  port: 502
 
 

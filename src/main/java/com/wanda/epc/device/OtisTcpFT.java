@@ -24,6 +24,10 @@ import java.util.List;
 public class OtisTcpFT extends BaseDevice {
 
     private final static Logger logger = LoggerFactory.getLogger(CommonDevice.class);
+    public static final String YXZT = "YXZT";
+    public static final String GZZT = "GZZT";
+    public static final String SXZT = "SXZT";
+    public static final String XTZT = "XTZT";
     private ModbusTcp modbusTcp = new ModbusTcp();
     private int modbusAddr = 1;
     @Autowired
@@ -52,58 +56,30 @@ public class OtisTcpFT extends BaseDevice {
                 int len = msgbuff.length;
                 if (len % 10 == 0) {
                     for (int i = 0; i < len; ) {
-                        String YXZT = "0";
-                        String GZZT = "0";
-                        String SXZT = "0";
-                        String LC = "0";
-                        String XTZT = "0";
+                        String yxzt = "0";
+                        String gzzt = "0";
+                        String sxzt = "0";
+                        String lc = "0";
+                        String xxzt = "0";
                         byte[] jxbuff = new byte[10];
                         System.arraycopy(msgbuff, i, jxbuff, 0, 10);
                         if (jxbuff[3] == 0) {
                             if (jxbuff[7] == 1) {
-                                YXZT = "1";
-                                XTZT = "1";
+                                yxzt = "1";
+                                xxzt = "1";
                             } else if (jxbuff[7] == 2) {
-                                YXZT = "1";
-                                SXZT = "1";
+                                yxzt = "1";
+                                sxzt = "1";
                             }
                         } else {
-                            GZZT = "1";
+                            gzzt = "1";
                         }
                         i += 10;
-                        List<DeviceMessage> deviceMessageYXZT = deviceParamListMap.get("YXZT" + String.valueOf(jxbuff[0]));
-                        if (!CollectionUtils.isEmpty(deviceMessageYXZT)) {
-                            String finalYXZT = YXZT.trim();
-                            deviceMessageYXZT.forEach(deviceMessage -> {
-                                deviceMessage.setValue(finalYXZT);
-                                sendMessage(deviceMessage);
-                            });
-                        }
-                        List<DeviceMessage> deviceMessageGZZT = deviceParamListMap.get("GZZT" + String.valueOf(jxbuff[0]));
-                        if (!CollectionUtils.isEmpty(deviceMessageGZZT)) {
-                            String finalGZZT = GZZT.trim();
-                            deviceMessageGZZT.forEach(deviceMessage -> {
-                                deviceMessage.setValue(finalGZZT);
-                                sendMessage(deviceMessage);
-                            });
-                        }
-                        List<DeviceMessage> deviceMessageSXZT = deviceParamListMap.get("SXZT" + String.valueOf(jxbuff[0]));
-                        if (!CollectionUtils.isEmpty(deviceMessageSXZT)) {
-                            String finalSXZT = SXZT.trim();
-                            deviceMessageSXZT.forEach(deviceMessage -> {
-                                deviceMessage.setValue(finalSXZT);
-                                sendMessage(deviceMessage);
-                            });
-                        }
-                        List<DeviceMessage> deviceMessageXTZT = deviceParamListMap.get("XTZT" + String.valueOf(jxbuff[0]));
-                        if (!CollectionUtils.isEmpty(deviceMessageXTZT)) {
-                            String finalXTZT = XTZT.trim();
-                            deviceMessageXTZT.forEach(deviceMessage -> {
-                                deviceMessage.setValue(finalXTZT);
-                                sendMessage(deviceMessage);
-                            });
-                        }
-                        logger.info(String.valueOf(jxbuff[0]) + "号扶梯" + "YXZT:" + YXZT + " GZZT:" + GZZT + " SXZT:" + SXZT + " XTZT:" + XTZT + " LC:" + LC);
+                        sendMsg(YXZT + String.valueOf(jxbuff[0]),yxzt.replace(" ",""));
+                        sendMsg(GZZT + String.valueOf(jxbuff[0]),gzzt.replace(" ",""));
+                        sendMsg(SXZT + String.valueOf(jxbuff[0]),sxzt.replace(" ",""));
+                        sendMsg(XTZT + String.valueOf(jxbuff[0]),xxzt.replace(" ",""));
+                        logger.info(String.valueOf(jxbuff[0]) + "号扶梯" + "YXZT:" + yxzt + " GZZT:" + gzzt + " SXZT:" + sxzt + " XTZT:" + xxzt + " LC:" + lc);
                     }
                 }
             }
