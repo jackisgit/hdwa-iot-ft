@@ -27,5 +27,5 @@ epc:
   cron:
 tcp:
   serverIP: 127.0.0.1
-  port: 60001
+  port: 60000
 

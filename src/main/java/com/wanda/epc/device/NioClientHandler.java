@@ -1,5 +1,6 @@
 package com.wanda.epc.device;
 
+import com.wanda.epc.common.SpringUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -9,18 +10,17 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class ClientHandler extends ChannelInboundHandlerAdapter {
+public class NioClientHandler extends ChannelInboundHandlerAdapter {
 
     //数据类别 1：轮询命令（ENQ ） 数值：0xE0
     //数据类别 2：回应数据（DAT ） 数值：0xA0
     private static byte ctrl_Data = (byte) 0xa0;
 
-    @Autowired
-    Device device;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         try {
+            Device device = SpringUtil.getBean(Device.class);
             ByteBuf buf = (ByteBuf) msg;
             byte[] buff = new byte[buf.readableBytes()];
             // 复制内容到字节数组bytes
