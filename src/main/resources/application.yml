@@ -13,9 +13,11 @@ mqtt:
   qos: 1
 
 spring:
+  main:
+    allow-circular-references: true
   redis:
     host: 127.0.0.1
-    port: 16379
+    port: 6379
     password:
 epc:
   gatewayId: FT
@@ -24,6 +26,6 @@ epc:
   threadNum: 1
   cron:
 tcp:
-  serverIP: 192.168.1.34
+  serverIP: 127.0.0.1
   port: 60001
 
