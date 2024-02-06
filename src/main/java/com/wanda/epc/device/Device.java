@@ -3,6 +3,8 @@ package com.wanda.epc.device;
 
 import com.wanda.epc.param.DeviceMessage;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -47,9 +49,8 @@ public class Device extends BaseDevice {
     @Value("${tcp.port}")
     private Integer serverPort;
 
-    /**
-     * 启动 Netty Client
-     */
+    private static byte[] base = {(byte) 0x00, (byte) 0x04, (byte) 0xe0, (byte) 0x1b};
+
     @PostConstruct
     public void init() throws InterruptedException {
         // 创建 Bootstrap 对象，用于 Netty Client 启动
@@ -69,7 +70,10 @@ public class Device extends BaseDevice {
                 reconnect();
                 return;
             }
-            future.channel();
+            //请求报文
+            ByteBuf byteBufMsg = Unpooled.buffer();
+            byteBufMsg.writeBytes(base);
+            future.channel().writeAndFlush(byteBufMsg);
             log.info("[start][Netty Client 连接服务器({}:{}) 成功]", serverHost, serverPort);
         });
     }

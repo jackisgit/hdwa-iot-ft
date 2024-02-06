@@ -4,9 +4,12 @@ import com.wanda.epc.common.SpringUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.net.InetSocketAddress;
 
 @Slf4j
 @Component
@@ -20,7 +23,6 @@ public class NioClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         try {
-            Device device = SpringUtil.getBean(Device.class);
             ByteBuf buf = (ByteBuf) msg;
             byte[] buff = new byte[buf.readableBytes()];
             // 复制内容到字节数组bytes
@@ -38,6 +40,7 @@ public class NioClientHandler extends ChannelInboundHandlerAdapter {
             } else if (CRC(buff)) {
                 //格式验证完成，开始解析
                 byte[] temp = new byte[12];
+                Device device = SpringUtil.getBean(Device.class);
                 for (int i = 3; i < buff.length - 12; i = i + 12) {
                     System.arraycopy(buff, i, temp, 0, 12);
                     device.oneInfo(temp);
@@ -50,6 +53,57 @@ public class NioClientHandler extends ChannelInboundHandlerAdapter {
             log.error("数据处理异常", e);
         }
 
+    }
+
+    /**
+     * 连接关闭!
+     */
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        InetSocketAddress socket = (InetSocketAddress) ctx.channel().remoteAddress();
+        String ip = socket.getAddress().getHostAddress();
+        int port = socket.getPort();
+        log.error("{}连接关闭！", ip + ":" + port);
+        final Device fdDevice = SpringUtil.getBean(Device.class);
+        fdDevice.reconnect();
+        super.channelInactive(ctx);
+    }
+
+    /**
+     * 客户端主动连接服务端
+     */
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) {
+        try {
+            super.channelActive(ctx);
+        } catch (Exception e) {
+            log.error("客户端连接异常", e);
+        }
+    }
+
+    /**
+     * 发生异常处理
+     */
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        cause.printStackTrace();
+        ctx.fireExceptionCaught(cause);
+        ctx.close();
+    }
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) {
+        try {
+            super.userEventTriggered(ctx, evt);
+        } catch (Exception e) {
+            log.error("客户端异常", e);
+        }
+        if (evt instanceof IdleStateEvent) {
+            IdleStateEvent event = (IdleStateEvent) evt;
+            if (event.state().equals(IdleState.READER_IDLE)) {
+                ctx.close();
+            }
+        }
     }
 
 
