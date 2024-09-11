@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
 
@@ -101,26 +102,35 @@ public class Device extends BaseDevice {
         //读操作
         for (int unitId = 1; unitId <= unitIdCount; unitId++) {
             try {
-                //40002 状态
-                String status = (String) readDevInfo(registerTypeId, dataTypeId, 2, unitId, 1);
+                String status = (String) readDevInfo(registerTypeId, dataTypeId, unitId, 1, 1);
                 String[] s = status.split("\\s+");
-                String zt = ByteUtil.decimalToBinary(ByteUtil.hexStringToInt(s[0]), 8);
-                String xxzt = String.valueOf(zt.charAt(4));
-                String sxzt = String.valueOf(zt.charAt(5));
-                String yxzt = String.valueOf(zt.charAt(7));
-                //40003 故障
-                String faultStatus = (String) readDevInfo(registerTypeId, dataTypeId, 3, unitId, 1);
-                String[] f = faultStatus.split("\\s+");
-                String fault = ByteUtil.decimalToBinary(ByteUtil.hexStringToInt(f[0]), 8);
-                String gz = String.valueOf(fault.charAt(7));
-                sendMsg(unitId + WD_SHIFOUSHANGXING, sxzt);
-                sendMsg(unitId + WD_SHIFOUXIAXING, xxzt);
-                if ("1".equals(yxzt) || "1".equals(xxzt) || "1".equals(sxzt)) {
-                    yxzt = "1";
+                String data = s[1];
+                logger.info(unitId + "号扶梯，采集数据：" + Arrays.toString(s));
+                String runStatus = "0";
+                String faultStatus = "0";
+                String up = "0";
+                String down = "0";
+                //上行
+                if ("90".equals(data) || "80".equals(data)) {
+                    runStatus = "1";
+                    up = "1";
+                    down = "0";
                 }
-                sendMsg(unitId + RUN_STATUS, yxzt);
-                sendMsg(unitId + FAULT_STATUS, gz);
-                logger.info(unitId + "号扶梯" + "YXZT:" + yxzt + " SXZT:" + sxzt + " XXZT:" + xxzt + " GZZT:" + gz);
+                //下行
+                else if ("50".equals(data) || "60".equals(data)) {
+                    runStatus = "1";
+                    up = "0";
+                    down = "1";
+                }
+                //故障
+                else if ("20".equals(data)) {
+                    faultStatus = "1";
+                }
+
+                sendMsg(unitId + RUN_STATUS, runStatus);
+                sendMsg(unitId + WD_SHIFOUSHANGXING, up);
+                sendMsg(unitId + WD_SHIFOUXIAXING, down);
+                sendMsg(unitId + FAULT_STATUS, faultStatus);
             } catch (Exception e) {
                 logger.error("采集{}号扶梯数据失败", unitId, e);
             }

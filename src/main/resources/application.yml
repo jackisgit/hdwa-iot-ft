@@ -1,6 +1,6 @@
 server:
   port: 9320
-beanName: device
+beanName: rLFTDevice
 mqtt:
   hostUrl: tcp://127.0.0.1:1883
   username: admin
@@ -16,15 +16,16 @@ spring:
     host: 127.0.0.1
     port: 16379
     password:
+
 #广场ID及GatewayId
 epc:
   gatewayId: FT
-  gcId: 4307020030
+  #需修改 广场id去掉pj
+  gcId: 3415221000
   subsystem: dtxt/
-  unitIdCount: 45
+  unitIdCount: 18
   threadNum: 1
-  cron: 0/30 * * * * ?
+#需修改 子系统信息
 modbus:
-  serverIP: 10.10.49.90
-  port: 11568
-
+  serverIP: 10.176.0.179
+  port: 502

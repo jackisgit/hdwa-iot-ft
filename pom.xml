@@ -10,7 +10,7 @@
 
     <artifactId>iot_epc_ft</artifactId>
     <name>iot_epc_ft</name>
-    <version>1.0.0-R20240123</version>
+    <version>1.0.0-R20240911</version>
 
     <dependencies>
         <dependency>
@@ -25,10 +25,5 @@
             <version>1.1.1</version>
         </dependency>
     </dependencies>
-
-
-    <build>
-        <finalName>IOT_EPC_FT_hitachi_V1.0.0.12_${version}</finalName>
-    </build>
 
 </project>
