@@ -21,11 +21,12 @@ spring:
 epc:
   gatewayId: FT
   #需修改 广场id去掉pj
-  gcId: 3415221000
+  gcId: 1711564200
   subsystem: dtxt/
-  unitIdCount: 18
+  startUnitId: 16
+  unitIdCount: 43
   threadNum: 1
 #需修改 子系统信息
 modbus:
-  serverIP: 10.176.0.179
+  serverIP: 172.16.4.22
   port: 502

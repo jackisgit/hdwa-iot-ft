@@ -57,6 +57,13 @@ public class Device extends BaseDevice {
      */
     @Value("${modbus.port}")
     private Integer port;
+
+    /**
+     * 电梯开始编号，用作遍历查询
+     */
+    @Value("${epc.startUnitId}")
+    private Integer startUnitId;
+
     /**
      * 电梯最大编号，用作遍历查询
      */
@@ -100,7 +107,7 @@ public class Device extends BaseDevice {
     @Override
     public boolean processData() {
         //读操作
-        for (int unitId = 1; unitId <= unitIdCount; unitId++) {
+        for (int unitId = startUnitId; unitId <= unitIdCount; unitId++) {
             try {
                 String status = (String) readDevInfo(registerTypeId, dataTypeId, unitId, 1, 1);
                 String[] s = status.split("\\s+");
@@ -126,6 +133,7 @@ public class Device extends BaseDevice {
                 else if ("20".equals(data)) {
                     faultStatus = "1";
                 }
+                log.warn(unitId + "号扶梯：故障：" + faultStatus + "  上行：" + up + "  下行：" + down);
 
                 sendMsg(unitId + RUN_STATUS, runStatus);
                 sendMsg(unitId + WD_SHIFOUSHANGXING, up);

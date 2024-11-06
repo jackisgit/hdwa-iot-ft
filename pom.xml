@@ -10,7 +10,7 @@
 
     <artifactId>iot_epc_ft</artifactId>
     <name>iot_epc_ft</name>
-    <version>1.0.0-R20240911</version>
+    <version>1.0.0-R20241105</version>
 
     <dependencies>
         <dependency>
@@ -25,5 +25,7 @@
             <version>1.1.1</version>
         </dependency>
     </dependencies>
-
+    <build>
+        <finalName>IOT_EPC_FT_Mitsubishi_modbus_tiange_${version}</finalName>
+    </build>
 </project>
