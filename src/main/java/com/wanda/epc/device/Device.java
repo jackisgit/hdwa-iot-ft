@@ -39,7 +39,6 @@ public class Device extends BaseDevice {
     public static final String WD_SHIFOUXIAXING = "_wD_shifouxiaxing";
     public static final String RUN_STATUS = "_runStatus";
     public static final String FAULT_STATUS = "_faultStatus";
-    private final static Logger logger = LoggerFactory.getLogger(Device.class);
     private static ModbusTcpMaster master;
     private static Object result = null;
     private static int registerTypeId = 3;
@@ -61,6 +60,11 @@ public class Device extends BaseDevice {
      */
     @Value("${epc.unitIdCount}")
     private Integer unitIdCount;
+    /**
+     * 电梯开始编号，默认为1
+     */
+    @Value("${epc.unitIdCountStart:1}")
+    private Integer unitIdCountStart;
 
     private static String hexString2binaryString(String hexString) {
         // 将16进制数转换为对应的整数
@@ -99,7 +103,7 @@ public class Device extends BaseDevice {
     @Override
     public boolean processData() {
         //读操作
-        for (int unitId = 1; unitId <= unitIdCount; unitId++) {
+        for (int unitId = unitIdCountStart; unitId <= unitIdCount; unitId++) {
             try {
                 //40002 状态
                 String status = (String) readDevInfo(registerTypeId, dataTypeId, 2, unitId, 1);
@@ -120,9 +124,9 @@ public class Device extends BaseDevice {
                 }
                 sendMsg(unitId + RUN_STATUS, yxzt);
                 sendMsg(unitId + FAULT_STATUS, gz);
-                logger.info(unitId + "号扶梯" + "YXZT:" + yxzt + " SXZT:" + sxzt + " XXZT:" + xxzt + " GZZT:" + gz);
+                log.info(unitId + "号扶梯" + "YXZT:" + yxzt + " SXZT:" + sxzt + " XXZT:" + xxzt + " GZZT:" + gz);
             } catch (Exception e) {
-                logger.error("采集{}号扶梯数据失败", unitId, e);
+                log.error("采集{}号扶梯数据失败", unitId, e);
             }
 
         }

@@ -19,12 +19,12 @@ spring:
 #广场ID及GatewayId
 epc:
   gatewayId: FT
-  gcId: 4307020030
+  gcId: 2025000528
   subsystem: dtxt/
-  unitIdCount: 45
+  unitIdCountStart: 9
+  unitIdCount: 26
   threadNum: 1
   cron: 0/30 * * * * ?
 modbus:
-  serverIP: 10.10.49.90
-  port: 11568
-
+  serverIP: 192.168.15.248
+  port: 10001
